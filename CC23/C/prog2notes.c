@@ -287,9 +287,7 @@ int main (void){
     printf("O valor de x no vetor é: %d e o valor de y é: %d", array.x, array.y);
 
     return 0;
-}
-
-/*
+}*/
 
 
 
