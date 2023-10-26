@@ -7,11 +7,13 @@
 typedef struct sPoint{
         float x, y;
         float angle;
+       
     }stPoint; //colocamos outro nome no final para que nao seja necessario passar struct nome_struct
 
 typedef struct  sArr{
     int elNumbers;
-    stPoint *arr;   
+    stPoint *arr;
+    int haveAngle;   
     }stArr;
 
 stPoint createPoints(stArr *arrP){//função parar criar os pontos
@@ -33,11 +35,22 @@ stPoint createPoints(stArr *arrP){//função parar criar os pontos
 
 
 void showArr (stArr *arrP){//exibindo o vetor
+
+    if(arrP->haveAngle ==0){
      for(int i = 0; i< arrP->elNumbers; i++){
-        printf("( %.1f\t, %.1f\t, %.2fº)\n", arrP->arr[i].x, arrP->arr[i].y, arrP->arr[i].angle);   
+        printf("( %.1f\t, %.1f)\n", arrP->arr[i].x, arrP->arr[i].y);   
         }
     printf("----------------------\n");
-}
+    }
+
+    else{
+        for(int i = 0; i< arrP->elNumbers; i++){
+        printf("( %.1f\t, %.1f\t, %.2f)\n", arrP->arr[i].x, arrP->arr[i].y, arrP->arr[i].angle);   
+        }
+    printf("----------------------\n");
+    }
+    }
+
 
 void createArrays(stArr *arrP, stPoint center){//criando os vetores a partir do centroide
         for (int i = 0; i<arrP->elNumbers; i++){//todos os pontos virão vetores traçados a partir do centroide
@@ -71,7 +84,7 @@ void calcAngle(stArr *arrP){//calculo do angulo
         }
 
     arrP->arr[i].angle = arccos; //o angulo de cada vetor é o arccos
-    
+    arrP->haveAngle = 1;
     }
 }
 
@@ -158,7 +171,7 @@ int main(void)
     organize(0, array.elNumbers-1, &array);
     totalArea = calcArea(&array);
     showArr(&array);
-    printf("A área total do polígono foi %.2f\n", totalArea);
+    printf("A area total do poligono foi %.2f\n", totalArea);
     
     return 0;
 }
