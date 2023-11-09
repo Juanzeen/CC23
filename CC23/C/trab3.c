@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <math.h>
 
 typedef struct sPoint{
         float x, y;
@@ -35,6 +34,7 @@ stPoint createPoints(stArr *arrP){//função parar criar os pontos
 
 
 void showArr (stArr *arrP){//exibindo o vetor
+    printf("----------------------\n");
 
     if(arrP->haveAngle ==0){
      for(int i = 0; i< arrP->elNumbers; i++){
@@ -133,17 +133,18 @@ void organize(int initialP, int finalP, stArr *arrP){ //quicksort do trabalho 2 
 }
 
 
-float calcArea(stArr *arrP){//calculando a area do poligono
+int calcArea(stArr *arrP){//calculando a area do poligono
     int j; 
-    float sumArea = 0.0f, area;
+    float sumArea = 0.0, area;
 
         for(int i = 0; i <arrP->elNumbers; i++){
             j = (i+1)%(arrP->elNumbers);
             sumArea = abs(((arrP->arr[j].x - arrP->arr[i].x) * (arrP->arr[j].y + arrP->arr[i].y)))/2; //calculo parcial de cada vetor
             area += sumArea; //recebe o somatorio do parcial de cada vetor para retornar a area total
         }
-        return area ; 
-        }  
+
+       return area;
+}  
 
 
 int main(void)
@@ -156,6 +157,7 @@ int main(void)
     //criando vetor de pontos 
     printf("Input the number of points you want ");
     scanf("%d", &el);
+
     array.arr = malloc(el*sizeof(stPoint));
     array.elNumbers = el;
     center = createPoints(&array); //ja retorna o centroide
@@ -169,9 +171,9 @@ int main(void)
 
     //organizando os vetores com quicksort e calculando área
     organize(0, array.elNumbers-1, &array);
-    totalArea = calcArea(&array);
     showArr(&array);
-    printf("A area total do poligono foi %.2f\n", totalArea);
+    totalArea = calcArea(&array);
+    printf("A area total foi: %.2f", totalArea);
     
     return 0;
 }
