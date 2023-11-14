@@ -22,7 +22,7 @@ stPoint createPoints(stArr *arrP){//função parar criar os pontos
         arrP->arr[i].x =  rand()%100;//sorteia x
         arrP->arr[i].y =  rand()%100;//sorteia y
         center.x +=  arrP->arr[i].x; //centro de x recebe todos os valores de x de cada ponto
-        center.y +=  arrP->arr[i].y; //centro de y recebe todos os valores de y de cada ponto
+        center.y +=  arrP->arr[i] .y; //centro de y recebe todos os valores de y de cada ponto
     }
 
     center.x/= arrP->elNumbers; //os valores dos pontos de x é dividido pelo total de pontos, para ser o centro real
@@ -36,7 +36,7 @@ stPoint createPoints(stArr *arrP){//função parar criar os pontos
 void showArr (stArr *arrP){//exibindo o vetor
     printf("----------------------\n");
 
-    if(arrP->haveAngle ==0){
+    if(arrP->haveAngle == 0){
      for(int i = 0; i< arrP->elNumbers; i++){
         printf("( %.1f\t, %.1f)\n", arrP->arr[i].x, arrP->arr[i].y);   
         }
@@ -68,25 +68,28 @@ void calcAngle(stArr *arrP){//calculo do angulo
         cos = arrP->arr[i].x/h; //dividimos a hipotenusa pelo cat adj para obter o cos
         arccos =  acos(cos); //usamos o acos para descobrir o angulo que gera esse valor de cos
 
-        if(cos >=0){
+        if(arrP->arr[i].x >=0){
             if(arrP->arr[i].y<0){
                 arccos = 360 - arccos; //dando o valor ao cateto oposto a partir do cos
             }
-
-            else{
-
-                if(arrP->arr[i].y<0)
-                    arccos = 180 + arccos;
-
-                else 
-                    arccos = 180 - arccos;
-            }
         }
 
+        if(arrP->arr[i].x<0){
+              if(arrP->arr[i].y<0){
+                arccos = 180 + arccos; //dando o valor ao cateto oposto a partir do cos
+            }
+
+            else
+                arccos = 180 - arccos;
+        }
+
+        
+
     arrP->arr[i].angle = arccos; //o angulo de cada vetor é o arccos
-    arrP->haveAngle = 1;
+    arrP->haveAngle += 1;
+        }
+    
     }
-}
 
 int centerPos(int initialP, int finalP, stArr *arrP){//posição certa do segundo trabalho adaptado
     int startP;
@@ -139,7 +142,7 @@ int calcArea(stArr *arrP){//calculando a area do poligono
 
         for(int i = 0; i <arrP->elNumbers; i++){
             j = (i+1)%(arrP->elNumbers);
-            sumArea = abs(((arrP->arr[j].x - arrP->arr[i].x) * (arrP->arr[j].y + arrP->arr[i].y)))/2; //calculo parcial de cada vetor
+            sumArea = fabs(((arrP->arr[j].x - arrP->arr[i].x) * (arrP->arr[j].y + arrP->arr[i].y)))/2; //calculo parcial de cada vetor
             area += sumArea; //recebe o somatorio do parcial de cada vetor para retornar a area total
         }
 
@@ -149,31 +152,44 @@ int calcArea(stArr *arrP){//calculando a area do poligono
 
 int main(void)
 {
-    int el;
+    int el, checkElements;
     stArr array;
     stPoint center;
     float totalArea;
 
     //criando vetor de pontos 
+    while(el<=1){
     printf("Input the number of points you want ");
     scanf("%d", &el);
+    
+    if(el<=1)
+        checkElements++;
 
-    array.arr = malloc(el*sizeof(stPoint));
+    if(checkElements!=0)
+        printf("The number of points must be bigger than 1!\n");
+    
+    }
+
+    array.arr = (stPoint*) malloc(el*sizeof(stPoint));
     array.elNumbers = el;
     center = createPoints(&array); //ja retorna o centroide
+    printf("Generated points:\n ");
     showArr(&array);
 
     //criando vetores e angulo
     createArrays(&array, center);
+    printf("Reallocated points:\n ");
     showArr(&array);
     calcAngle(&array);
+    printf("Vectors with angle:\n ");
     showArr(&array);
 
     //organizando os vetores com quicksort e calculando área
     organize(0, array.elNumbers-1, &array);
+    printf("Organizing vectors by angles:\n ");
     showArr(&array);
     totalArea = calcArea(&array);
-    printf("A area total foi: %.2f", totalArea);
+    printf("The total area was: %.2f\n", totalArea);
     
     return 0;
 }
